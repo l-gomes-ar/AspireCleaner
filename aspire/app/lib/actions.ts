@@ -232,8 +232,6 @@ export async function updateQuote(id: string, prevState: State, formData: FormDa
         fridge,
         typeOfService
     });
-
-    const date = new Date();
     
     try {
         await sql`
