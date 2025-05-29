@@ -26,30 +26,49 @@ export default async function Page(props: { params: Promise<{id: string}> }) {
                                 <p className="font-semibold md:ml-2">{quote.name}</p>
                             </div>
                         </li>
-                        <li>
-                            <div className="md:flex md:flex-row md:flex-start">
-                                <p>Email:</p>
-                                <p className="font-semibold md:ml-2">{quote.email}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="md:flex md:flex-row md:flex-start">
-                                <p>Phone Number:</p>
-                                <p className="font-semibold md:ml-2">{quote.phone_number}</p>
-                            </div>
-                        </li>
-                        <li>
-                            <div className="md:flex md:flex-row md:flex-start">
-                                <p>Address:</p>
-                                <p className="font-semibold md:ml-2">{quote.address}</p>
-                            </div>
-                        </li>
+
+                        {(quote.email) ? (
+                            <li>
+                                <div className="md:flex md:flex-row md:flex-start">
+                                    <p>Email:</p>
+                                    <p className="font-semibold md:ml-2">{quote.email}</p>
+                                </div>
+                            </li>
+                        ) : <></>}
+
+                        {(quote.phone_number) ? (
+                            <li>
+                                <div className="md:flex md:flex-row md:flex-start">
+                                    <p>Phone Number:</p>
+                                    <p className="font-semibold md:ml-2">{quote.phone_number}</p>
+                                </div>
+                            </li>
+                        ) : <></>}
+
+                        {(quote.address) ? (
+                            <li>
+                                <div className="md:flex md:flex-row md:flex-start">
+                                    <p>Address:</p>
+                                    <p className="font-semibold md:ml-2">{quote.address}</p>
+                                </div>
+                            </li>
+                        ) : <></>}
                     </ul>
                 </div>
                 <div className="bg-white p-4 rounded-lg text-start">
                     <p className="text-md font-semibold mb-4">Quote Price</p>
                     <p className="px-4 font-bold text-xl">{formatCurrency(quote.quote)}</p>
                     <p className="px-4 text-sm text-gray-500">Quoted on {formatDateToLocal(quote.date.toString())}</p>
+                </div>
+                <div className="bg-white p-4 rounded-lg text-start space-y-4">
+                    <p className="text-md font-semibold">
+                        Additional Notes                    
+                    </p>
+                    {(quote.notes) ? (
+                        <p className="px-4">{quote.notes}</p>
+                    ) : (
+                        <p className="px-4">None</p>       
+                    )}
                 </div>
                 <div className="bg-white p-4 rounded-lg text-start space-y-4">
                     <p className="text-md font-semibold">

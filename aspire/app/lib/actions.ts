@@ -24,10 +24,20 @@ const nonNegativeNumber = z
 const FormSchema = z.object({
     id: z.string(),
     date: z.string(),
-    name: z.string(),
-    email: z.string().email({ message: "Please enter a valid email address" }),
-    phoneNumber: z.string(),
-    address: z.string(),
+    name: z.string().trim().min(1, { message: "A name is required!" }),
+    email: z
+    .string()
+    .transform(val => (val!.trim() === "" ? null : val))
+    .refine(
+      (val) => val === null || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val!),
+      {
+        message: "Please enter a valid email address",
+      }
+    )
+    .nullable(),
+    phoneNumber: z.string().nullable().nullable().transform(val => (val!.trim() === "" ? null : val)),
+    address: z.string().nullable().nullable().transform(val => (val!.trim() === "" ? null : val)),
+    notes: z.string().max(255, {message: "Notes must be less than 256 character(s)"}).nullable().transform(val => (val!.trim() === "" ? null : val)),
     bedrooms: nonNegativeNumber,
     bathrooms: nonNegativeNumber,
     powderRooms: nonNegativeNumber,
@@ -56,6 +66,7 @@ export type State = {
         email?: string[];
         phoneNumber?: string[];
         address?: string[];
+        notes?: string[];
         bedrooms?: string[];
         bathrooms?: string[];
         powderRooms?: string[];
@@ -81,6 +92,7 @@ export async function generateQuote(prevState: State, formData: FormData) {
         email: formData.get("email"),
         phoneNumber: formData.get("phoneNumber"),
         address: formData.get("address"),
+        notes: formData.get("notes"),
         bedrooms: formData.get("bedrooms"),
         bathrooms: formData.get("bathrooms"),
         powderRooms: formData.get("powderRooms"),
@@ -110,6 +122,7 @@ export async function generateQuote(prevState: State, formData: FormData) {
         email,
         phoneNumber,
         address,
+        notes,
         bedrooms,
         bathrooms,
         powderRooms,
@@ -147,9 +160,9 @@ export async function generateQuote(prevState: State, formData: FormData) {
         await sql`
             INSERT INTO 
               quote
-                (name, email, phone_number, address, quote, bedrooms, bathrooms, powder_rooms, living_rooms, kitchen, laundry_rooms, pets, office, gym_room, cinema, blinders, oven, fridge, type_of_service)
+                (name, email, phone_number, address, notes, quote, bedrooms, bathrooms, powder_rooms, living_rooms, kitchen, laundry_rooms, pets, office, gym_room, cinema, blinders, oven, fridge, type_of_service)
             VALUES 
-                (${name}, ${email}, ${phoneNumber}, ${address}, ${quoteInCents}, ${bedrooms}, ${bathrooms}, ${powderRooms}, ${livingRooms}, ${kitchen}, ${laundryRooms}, ${pets === "yes"}, ${office}, ${gymRoom}, ${cinema}, ${blinders}, ${oven}, ${fridge}, ${typeOfService})
+                (${name}, ${email}, ${phoneNumber}, ${address}, ${notes}, ${quoteInCents}, ${bedrooms}, ${bathrooms}, ${powderRooms}, ${livingRooms}, ${kitchen}, ${laundryRooms}, ${pets === "yes"}, ${office}, ${gymRoom}, ${cinema}, ${blinders}, ${oven}, ${fridge}, ${typeOfService})
         `;
     } catch (error) {
         return {
@@ -171,6 +184,7 @@ export async function updateQuote(id: string, prevState: State, formData: FormDa
         email: formData.get("email"),
         phoneNumber: formData.get("phoneNumber"),
         address: formData.get("address"),
+        notes: formData.get("notes"),
         bedrooms: formData.get("bedrooms"),
         bathrooms: formData.get("bathrooms"),
         powderRooms: formData.get("powderRooms"),
@@ -200,6 +214,7 @@ export async function updateQuote(id: string, prevState: State, formData: FormDa
         email,
         phoneNumber,
         address,
+        notes,
         bedrooms,
         bathrooms,
         powderRooms,
@@ -241,6 +256,7 @@ export async function updateQuote(id: string, prevState: State, formData: FormDa
                 email = ${email},
                 phone_number = ${phoneNumber},
                 address = ${address},
+                notes = ${notes},
                 quote = ${quoteInCents},
                 bedrooms = ${bedrooms},
                 bathrooms = ${bathrooms},

@@ -27,9 +27,29 @@ export default function QuoteForm() {
               id={field.field}
               name={field.field}
               className="border rounded p-1"
+              aria-describedby={`${field}-error`}
             />
+            {state.errors?.[field.field as keyof typeof state.errors] && 
+                state.errors[field.field as keyof typeof state.errors]?.map((error: string) => (
+                    <p id={`${field}-error`} className="mt-2 text-sm text-red-500" key={error}>
+                        {error}
+                    </p>
+                ))
+            }
           </div>
         ))}
+      </fieldset>
+
+      <fieldset className="border p-4 rounded">
+        <legend className="font-semibold px-2">Additional Notes:</legend>
+        <textarea aria-describedby="notes-error" name="notes" id="notes" rows={4} className="border rounded p-1 w-full"></textarea>
+        {state.errors?.notes && 
+            state.errors.notes.map((error: string) => (
+                <p id="notes-error" className="text-red-500 text-sm mt-2" aria-live="polite" aria-atomic="true" key={error}>
+                    {error}
+                </p>
+            ))
+        }
       </fieldset>
       
       <fieldset className="border p-4 rounded">

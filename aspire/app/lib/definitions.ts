@@ -2,9 +2,10 @@ export type Quote = {
     id: string;
     date: Date;
     name: string;
-    email: string;
-    phone_number: string;
-    address: string;
+    email: string | null;
+    phone_number: string | null;
+    address: string | null;
+    notes: string | null;
     quote: number;
     bedrooms: number;
     bathrooms: number;

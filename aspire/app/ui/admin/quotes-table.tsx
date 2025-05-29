@@ -20,8 +20,8 @@ export default async function QuotesTable() {
                                 <p className="text-sm text-gray-500">{formatDateToLocal(quote.date.toString())}</p>
                             </div>
                             <div className="mb-2 flex flex-row w-full justify-between flex-wrap">   
-                                <p className="text-sm text-gray-500 mb-2">{quote.email}</p>
-                                <p className="text-sm text-gray-500">{quote.phone_number}</p>
+                                <p className="text-sm text-gray-500 mb-2">{(quote.email) ? quote.email : "N/A"}</p>
+                                <p className="text-sm text-gray-500">{(quote.phone_number) ? quote.phone_number : "N/A"}</p>
                             </div>
 
                         </div>
@@ -77,10 +77,10 @@ export default async function QuotesTable() {
                         </div>
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                        {quote.email}
+                        {(quote.email) ? quote.email : "N/A"}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
-                        {quote.phone_number}
+                        {(quote.phone_number) ? quote.phone_number : "N/A"}
                     </td>
                     <td className="whitespace-nowrap px-3 py-3">
                         {formatCurrency(quote.quote)}
